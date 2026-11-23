@@ -14,6 +14,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import java.util.Optional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -32,10 +34,12 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/health", "/actuator/health", "/actuator/info").permitAll()
-                        .requestMatchers("/api/v1/auth/session", "/api/v1/auth/role/select",
+                        .requestMatchers("/api/v1/auth/session").permitAll()
+                        .requestMatchers("/api/v1/auth/local/login").permitAll()
+                        .requestMatchers("/api/v1/auth/role/select",
                                 "/api/v1/auth/role/verify", "/api/v1/auth/logout",
                                 "/api/v1/auth/admin/**").authenticated()
-                        .requestMatchers("/login/**", "/oauth2/**").permitAll()
+                        .requestMatchers("/login", "/login/**", "/oauth2/**").permitAll()
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().denyAll());
         http.addFilterAfter(new RoleContextFilter(), UsernamePasswordAuthenticationFilter.class);

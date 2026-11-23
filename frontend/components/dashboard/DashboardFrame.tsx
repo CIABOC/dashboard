@@ -4,7 +4,7 @@ export default function DashboardFrame() {
   return (
     <iframe
       title="CIABOC Management Dashboard wireframe"
-      src="/prototype.html"
+      src="/prototype.html#authenticated"
       className="h-screen w-screen border-0"
     />
   );

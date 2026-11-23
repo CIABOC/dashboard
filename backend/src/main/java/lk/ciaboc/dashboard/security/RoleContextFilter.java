@@ -16,11 +16,17 @@ public class RoleContextFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         boolean publicApi = path.equals("/api/v1/health")
                 || path.equals("/api/v1/auth/session")
+                || path.equals("/api/v1/auth/local/login")
                 || path.startsWith("/api/v1/auth/role/")
                 || path.equals("/api/v1/auth/logout");
+        Object roleContext = request.getSession(false) == null
+                ? null
+                : request.getSession(false).getAttribute(AuthService.SELECTED_USER_ROLE_SESSION_KEY);
+        boolean temporaryLocalSession = roleContext instanceof Long roleId && roleId == -1L;
         if (path.startsWith("/api/") && !publicApi
                 && request.getSession(false) != null
-                && request.getSession(false).getAttribute(AuthService.SELECTED_USER_ROLE_SESSION_KEY) == null) {
+                && roleContext == null
+                && !temporaryLocalSession) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.setContentType("application/json");
             response.getWriter().write("{\"timestamp\":\"\",\"success\":false,\"data\":null,\"error\":\"Verified role context required\"}");

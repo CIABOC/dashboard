@@ -31,11 +31,10 @@ npm start
 
 ## PostgreSQL
 
-The local CIABOC database container is configured on port `5433`:
+The dedicated CIABOC PostgreSQL container is available on host port `55432`:
 
 ```powershell
 docker ps
-# ciaboc-dashboard-db should expose 0.0.0.0:5433 -> 5432
 docker exec ciaboc-dashboard-db psql -U ciaboc -d ciaboc_dashboard -c "SELECT 1;"
 ```
 
@@ -51,13 +50,13 @@ mvn spring-boot:run
 Or set overrides for the shell:
 
 ```powershell
-$env:DB_URL="jdbc:postgresql://127.0.0.1:5433/ciaboc_dashboard"
+$env:DB_URL="jdbc:postgresql://127.0.0.1:55432/ciaboc_dashboard"
 $env:DB_USERNAME="ciaboc"
 $env:DB_PASSWORD="ciaboc"
 mvn spring-boot:run
 ```
 
-Spring resolves environment variables for server, database and CORS settings. The default development database URL is `jdbc:postgresql://localhost:5433/ciaboc_dashboard`.
+Spring resolves environment variables for server, database and CORS settings. The default development database URL is `jdbc:postgresql://localhost:55432/ciaboc_dashboard`.
 
 Run tests:
 
@@ -72,6 +71,23 @@ mvn test
 - `http://localhost:8080/api/v1/health`
 - `http://localhost:8080/api/v1/kpis`
 - `http://localhost:8080/api/v1/executive/overview`
+
+## Temporary Local Login
+
+Until CIABOC SSO is configured, the login page also accepts environment-controlled local credentials:
+
+- Email: `admin@ciaboc.local`
+- Password: `ChangeMe123!`
+
+Configure or change these before use:
+
+```powershell
+$env:LOCAL_AUTH_ENABLED="true"
+$env:LOCAL_AUTH_EMAIL="admin@ciaboc.local"
+$env:LOCAL_AUTH_PASSWORD="ChangeMe123!"
+```
+
+Set `LOCAL_AUTH_ENABLED=false` to disable temporary login. This fallback must not be enabled in production.
 
 ## Project Documentation
 

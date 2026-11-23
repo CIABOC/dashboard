@@ -2,9 +2,15 @@ package lk.ciaboc.dashboard.auth;
 
 import jakarta.servlet.http.HttpSession;
 import lk.ciaboc.dashboard.api.ApiResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 import java.util.List;
 import java.util.Map;
@@ -13,15 +19,62 @@ import java.util.Map;
 @RequestMapping("/api/v1/auth")
 public class AuthController {
     private final AuthService auth;
+    private final boolean localAuthEnabled;
+    private final String localAuthEmail;
+    private final String localAuthPassword;
 
-    public AuthController(AuthService auth) {
+    public AuthController(AuthService auth,
+                          @Value("${dashboard.local-auth.enabled:true}") boolean localAuthEnabled,
+                          @Value("${dashboard.local-auth.email:admin@ciaboc.local}") String localAuthEmail,
+                          @Value("${dashboard.local-auth.password:ChangeMe123!}") String localAuthPassword) {
         this.auth = auth;
+        this.localAuthEnabled = localAuthEnabled;
+        this.localAuthEmail = localAuthEmail;
+        this.localAuthPassword = localAuthPassword;
     }
 
     public record RoleView(Long userRoleId, String roleCode, String roleName, String organizationalUnit) {}
     public record SsoRoleRequest(String subject) {}
     public record RolePinRequest(Long userRoleId, String pin) {}
     public record ProvisionPinRequest(Long userRoleId) {}
+    public record LocalLoginRequest(String email, String password) {}
+
+    @PostMapping("/local/login")
+    public ResponseEntity<ApiResponse<Object>> localLogin(@RequestBody LocalLoginRequest request,
+                                                           HttpSession session) {
+        if (!localAuthEnabled) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error("Local login is disabled"));
+        }
+        if (request.email() == null || request.password() == null
+                || !request.email().trim().equalsIgnoreCase(localAuthEmail)
+                || !java.security.MessageDigest.isEqual(
+                        request.password().getBytes(java.nio.charset.StandardCharsets.UTF_8),
+                        localAuthPassword.getBytes(java.nio.charset.StandardCharsets.UTF_8))) {
+            auth.audit(request.email(), "LOCAL_LOGIN", "FAILURE", "USER", request.email(), "Invalid local credentials");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.error("Invalid email or password"));
+        }
+
+        session.setAttribute(AuthService.SSO_SUBJECT_SESSION_KEY, "local:" + localAuthEmail);
+        session.setAttribute(AuthService.SELECTED_USER_ROLE_SESSION_KEY, -1L);
+        session.setMaxInactiveInterval(30 * 60);
+        UsernamePasswordAuthenticationToken authentication =
+                new UsernamePasswordAuthenticationToken(
+                        localAuthEmail,
+                        "",
+                        List.of(new SimpleGrantedAuthority("ROLE_TEMPORARY_LOCAL")));
+        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
+        session.setAttribute(
+                HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+                securityContext);
+        auth.audit(localAuthEmail, "LOCAL_LOGIN", "SUCCESS", "USER", localAuthEmail,
+                "Temporary local login used while SSO is unavailable");
+        return ResponseEntity.ok(ApiResponse.success(Map.of(
+                "authenticated", true,
+                "temporaryLocalAuth", true,
+                "roles", List.of())));
+    }
 
     @GetMapping("/session")
     public ApiResponse<Object> session(HttpSession session) {
@@ -37,10 +90,13 @@ public class AuthController {
                         assignment.getOrganizationalUnit() == null ? null : assignment.getOrganizationalUnit().getCode()))
                 .toList();
         Object selectedRole = session.getAttribute(AuthService.SELECTED_USER_ROLE_SESSION_KEY);
+        boolean temporaryLocalAuth = selectedRole instanceof Long selected
+                && selected == -1L;
         return ApiResponse.success(Map.of(
                 "authenticated", true,
                 "roles", roles,
-                "selectedUserRoleId", selectedRole == null ? null : selectedRole));
+                "selectedUserRoleId", selectedRole == null ? null : selectedRole,
+                "temporaryLocalAuth", temporaryLocalAuth));
     }
 
     @PostMapping("/role/select")
