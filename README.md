@@ -13,7 +13,7 @@ copy .env.example .env.local
 npm run dev
 ```
 
-Open `http://localhost:3000`. Set `NEXT_PUBLIC_API_BASE_URL=http://localhost:8080/api/v1` in `.env.local` when overriding the default.
+Open `http://localhost:3000`. Set `NEXT_PUBLIC_API_BASE_URL=http://localhost:8080` in `.env.local` when overriding the default.
 
 ```powershell
 npm run build

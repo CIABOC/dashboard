@@ -1,5 +1,6 @@
 package lk.ciaboc.dashboard.common;
 
+import lk.ciaboc.dashboard.auth.AuthService;
 import lk.ciaboc.dashboard.api.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    @ExceptionHandler(AuthService.UnauthorizedRoleException.class)
+    public ResponseEntity<ApiResponse<Void>> unauthorized(AuthService.UnauthorizedRoleException exception) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponse.error(exception.getMessage()));
+    }
+
+    @ExceptionHandler(AuthService.PinDeniedException.class)
+    public ResponseEntity<ApiResponse<Void>> pinDenied(AuthService.PinDeniedException exception) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.error(exception.getMessage()));
+    }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<Void>> validation(MethodArgumentNotValidException exception) {
         return ResponseEntity.badRequest().body(ApiResponse.error("Validation failed"));
