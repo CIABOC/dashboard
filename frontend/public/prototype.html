@@ -1,5 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>CIABOC Management Dashboard – Prototype</title>
 <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=Noto+Sans+Sinhala:wght@400;600&family=Noto+Sans+Tamil:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/vmr.css">
 <style>
 :root{--b:#0F3D63;--g:#C89B3C;--t:#1D6FA5;--bg:#F5F7FA;--tx:#2D3748;--bd:#E2E8F0;--mu:#5B6B7F;--ok:#2E7D5B;--w:#A15F0A;--r:#B3261E;color-scheme:light}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.45 'Source Sans 3','Noto Sans Sinhala','Noto Sans Tamil',system-ui,sans-serif}
@@ -55,6 +56,8 @@ button,select,input{font:inherit;color:inherit}button{cursor:pointer}:focus-visi
 @media(max-width:700px){.g{grid-template-columns:1fr}.s2,.s3{grid-column:auto}.top .srch{width:100%}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style></head><body><div id="app"></div><div id="toast" role="status"></div>
+<script src="/vmr-view.js"></script>
+<script src="/vmr-live.js"></script>
 <script>
 const C={b:'#0F3D63',g:'#C89B3C',t:'#1D6FA5',ok:'#2E7D5B',w:'#C07A12',r:'#B3261E'},col=[C.b,C.t,C.g,'#6B8BA4','#2E7D5B','#9AA8B8'];
 const st={screen:location.hash=='#authenticated'?'overview':'login',n:12,lang:'en',role:'dg',sc:false,cmp:true,div:'All divisions',tab:'Users',sev:'All',nt:false,pm:false,md:null,dr:null,load:false};
@@ -163,27 +166,6 @@ admin:()=>g(kr(kpi('Visitors today','142'),kpi('Fleet utilization','74%'),kpi('R
 +card('Vehicle and fleet utilization',prog([{n:'Operational vehicles',v:74,c:C.ok},{n:'Pool vehicles',v:61},{n:'Under maintenance',v:12,c:C.g}],'Fleet'),'s2')
 +card('Records workflow',donut([{n:'Received',v:120},{n:'In review',v:118},{n:'Dispatched',v:80}],'Records'),'s2')
 +card('Service response time (hours)',line(S(MO),[{n:'Average',c:C.g,v:S(gen(12,18,3,2))}],'Response'),'s2')),
-vmr:()=>{const V=st.n*4200,dir=st.vdir||'All',hrs=['8','9','10','11','12','13','14','15','16','17'],days=Array.from({length:14},(_,i)=>i+9+''),wk=Array.from({length:8},(_,i)=>'W'+(i+1)),
-heat='<div style="display:grid;grid-template-columns:40px repeat(10,1fr);gap:4px"><div></div>'+hrs.map(x=>`<div class="sub" style="text-align:center">${x}:00</div>`).join('')+['Mon','Tue','Wed','Thu','Fri'].map((d,r)=>`<div class="sub">${d}</div>`+hrs.map((x,c)=>{const v=Math.round(20+60*Math.exp(-((c-3)**2)/6)*(1-r*.06)+((r*7+c*3)%9));return `<div class="hit" data-a="drill" data-k="Arrivals ${d} ${x}:00" data-v="${v}" style="background:rgba(15,61,99,${(v/90).toFixed(2)});color:${v>50?'#fff':'#2D3748'};text-align:center;border-radius:4px;padding:5px 0;font-size:11px">${v}</div>`}).join('')).join('')+'</div>',
-vs=[{n:'Entries',c:C.b,v:gen(14,58,9,1)},{n:'Exits',c:C.t,v:gen(14,55,9,2)},{n:'Denials',c:C.r,v:gen(14,3,1,3)}].filter(s=>dir=='All'||(dir=='Entry'?s.n!='Exits':s.n!='Entries')),
-H=x=>`<h3 class="s6" style="margin:10px 0 0;color:var(--b)">${x}</h3>`;
-return `<div class="fl"><label>Vehicle direction <select data-a="vdir">${['All','Entry','Exit'].map(d=>`<option ${d==dir?'selected':''}>${d}</option>`).join('')}</select></label><span class="sub">Period follows the selector above. Comparison: previous equivalent period.</span></div>`+conf('Counts, rates and trends only. Visitor names, identity numbers, contact details, signatures, vehicle-owner names and individual visit records are not shown. Unique visitors and total visits are reported separately.')
-+g(H('Today')+kr(...[['Visitors registered today','142'],['Unique visitors today','118'],['Visitors currently inside','37'],['Visits completed today','96'],['Visits declined today','7'],['Visits cancelled today','4'],['Vehicles currently inside','23'],['Vehicle entries today','61'],['Vehicle exits today','38'],['Vehicle denials today','3'],['Devices currently held','5'],['Hosts with overdue responses','2']].map(x=>kpi(x[0],x[1])))
-+H('Selected period')+kr(...[['Total visits',V.toLocaleString()],['Unique visitors',Math.round(V*.71).toLocaleString()],['Visit completion rate','94.2%'],['Decline rate','4.8%'],['Cancellation rate','2.9%'],['Avg host response time','11 min'],['Avg time on premises','48 min'],['Vehicle entries',Math.round(V*.43).toLocaleString()],['Vehicle denials',Math.round(V*.013).toLocaleString()],['Vehicle denial rate','3.1%'],['Vehicle overstay count','6'],['Avg vehicle stay','2 h 14 min'],['Unique vehicles entered',Math.round(V*.09).toLocaleString()],['Appointments scheduled',Math.round(V*.22).toLocaleString()],['Appointment completion','91%'],['Appointment no-show rate','6%'],['Unreturned devices','5']].map(x=>kpi(x[0],x[1])))
-+H('Trends')+card('Visits and unique visitors by day',line(days,[{n:'Visits',c:C.b,v:gen(14,140,22,1)},{n:'Unique visitors',c:C.g,v:gen(14,100,16,2)}],'Visits'),'s3','Last 14 days')
-+card('Visit outcomes by day',line(days,[{n:'Completed',c:C.ok,v:gen(14,96,12,1)},{n:'Declined',c:C.r,v:gen(14,7,2,2)},{n:'Cancelled',c:C.g,v:gen(14,4,2,3)}],'Outcomes'),'s3')
-+card('Vehicle movements by day',line(days,vs,'Vehicles'),'s3',dir=='All'?'Entries, exits, denials':dir+' view')
-+card('Average host response time (min, weekly)',line(wk,[{n:'Actual',c:C.b,v:gen(8,12,2,1)},{n:'Target 15 min',c:C.g,d:1,v:Array(8).fill(15)}],'Response'),'s3')
-+card('Arrival volume by weekday and hour',heat,'s6','Busiest window 10:00–11:00 · peak weekday Tuesday')
-+H('Breakdowns')+card('Visits by visitor category',donut([{n:'Public',v:1620},{n:'Official',v:1180},{n:'Contractor',v:640},{n:'Interview',v:410},{n:'Delivery',v:350}],'Category'),'s2')
-+card('Visits by host department',prog([{n:'Preliminary Examination',v:34},{n:'Investigation',v:26},{n:'Legal',v:15},{n:'Corporate Services',v:15},{n:'Other',v:10}],'Department'),'s2')
-+card('Vehicle entries by owner type',donut([{n:'Staff',v:1210},{n:'Visitor',v:640},{n:'Official',v:410},{n:'Contractor',v:290}],'Owner type'),'s2')
-+card('Vehicle denials by reason',prog([{n:'Not authorized',v:38,c:C.r},{n:'Watch-list match',v:27,c:C.r},{n:'No appointment',v:22,c:C.g},{n:'Other',v:13,c:C.g}],'Denial reason'),'s2')
-+card('Identity verification method',prog([{n:'ID card scan',v:72},{n:'Passport scan',v:9},{n:'Driving licence',v:12},{n:'Documented exception',v:7,c:C.g}],'Verification'),'s2')
-+card('Host response status',prog([{n:'Within 15 minutes',v:94,c:C.ok},{n:'Delayed',v:5,c:C.g},{n:'No response',v:1,c:C.r}],'Host response'),'s2')
-+H('Executive exceptions')+tbl('vx','Exception panel (counts only)',['Exception','Count','Indicator','Action'],[['Visits without checkout',4,chip('Watch','wn'),'<button class="btn s o" data-a="ops">Open screen</button>'],['Vehicles overstaying',6,chip('Action needed','er'),'<button class="btn s o" data-a="ops">Open screen</button>'],['Hosts not responding',2,chip('Watch','wn'),'<button class="btn s o" data-a="ops">Open screen</button>'],['Devices not returned',5,chip('Action needed','er'),'<button class="btn s o" data-a="ops">Open screen</button>'],['Blocked vehicle attempts',3,chip('Review','in'),'<button class="btn s o" data-a="ops">Open screen</button>'],['Flagged vehicle admissions',1,chip('Review','in'),'<button class="btn s o" data-a="ops">Open screen</button>'],['Identity exceptions',9,chip('Watch','wn'),'<button class="btn s o" data-a="ops">Open screen</button>'],['Delayed visits',3,chip('Watch','wn'),'<button class="btn s o" data-a="ops">Open screen</button>'],['Audit chain failures',0,chip('Healthy','ok'),'—'],['Incomplete production setup',0,chip('Healthy','ok'),'—']])
-+tbl('vt','Targets and thresholds (proposed, pending management approval)',['KPI','Example target','Current','Status'],[['Host response','95% within 15 min','94%',chip('Watch','wn')],['Visit identity verification','100% verified or documented','100%',chip('On track','ok')],['Vehicle denial documentation','100% with a reason','100%',chip('On track','ok')],['Vehicle overstays','< 2% of entries','1.8%',chip('On track','ok')],['Unreturned devices (end of day)','0','5',chip('Overdue','er')],['Visit completion','95% checked out','94.2%',chip('Watch','wn')],['Blocked vehicle oversight','100% supervisor authorized','100%',chip('On track','ok')],['Audit integrity','0 chain failures','0',chip('On track','ok')]])
-)},
 alerts:()=>{const F=['All','Critical','High','Medium','Low'],R=A.filter(a=>st.sev=='All'||a.sev==st.sev);
 return `<div class="fl">${F.map(f=>`<button class="btn s ${f==st.sev?'':'o'}" data-a="sev" data-k="${f}">${f} (${f=='All'?A.length:A.filter(a=>a.sev==f).length})</button>`).join('')}</div>`
 +`<section class="card"><div class="tw"><table><thead><tr>${['Severity','Alert','Category','Department','Created','Owner','Escalation','Status','Action'].map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${R.map(a=>`<tr class="rw" data-a="alert" data-k="${a.id}"><td>${chip(a.sev,sevC[a.sev])}</td><td><b>${a.id}</b> ${a.t}</td><td>${a.cat}</td><td>${a.dept}</td><td>${a.cr}</td><td>${a.own}</td><td>${a.esc}</td><td>${chip(a.st,a.st=='Resolved'?'ok':a.st=='New'?'er':'in')}</td><td>${a.st=='New'?`<button class="btn s" data-a="ack" data-k="${a.id}">Acknowledge</button>`:'—'}</td></tr>`).join('')||'<tr><td colspan="9" class="empty">No alerts match this filter. Choose “All” to see every alert.</td></tr>'}</tbody></table></div></section>`},
@@ -199,29 +181,41 @@ return `<div class="tabs">${tabs.map(x=>`<button class="${x==st.tab?'on':''}" da
 // ---------- shell
 const FR={finance:['Delayed · synced 26 h ago','wn'],lkeh:['Delayed · synced 6 h ago','wn'],hr:['Delayed · synced 1 h 47 min ago','wn']};
 function noperm(k){return `<div class="card empty" style="padding:60px"><div style="font-size:34px">🔒</div><h3>You don’t have access to ${t(k)}</h3><p>The ${ROLES[st.role]} role doesn’t include this module. Ask an ICT / Data administrator to review your access.</p><button class="btn" data-a="go" data-k="overview">Back to overview</button></div>`}
-function page(){const k=st.screen,f=FR[k]||['Current · updated 22 Nov 2026, 08:15','ok'],ex=st.role!='dir';
+function page(){const k=st.screen;
+if(k==='vmr')return '<div id="vmr-live"></div>';
+const f=FR[k]||['Current · updated 22 Nov 2026, 08:15','ok'],ex=st.role!='dir';
 const body=!ACC[st.role].includes(k)?noperm(k):st.load?g('<div class="sk s2"></div>'.repeat(6)):SC[k]();
 return `<div class="ph"><span class="chip ${f[1]}">${f[0]}</span><span class="sub">Sample data · fictional</span><span style="margin-left:auto"></span><button class="btn o" data-a="exp" ${ex?'':'disabled title="Export needs an authorized role"'}>Export aggregate report</button></div>`+body}
 const nbad=()=>A.filter(a=>a.st=='New').length;
-function shell(){const k=st.screen,ni=NAV.filter(x=>x[0]!='alerts'||1);
-return `<aside class="side ${st.sc?'c':''}"><div class="brand"><div class="logo">C</div><div class="lb"><b>CIABOC</b><small>Management Intelligence</small></div></div><nav class="nav" aria-label="Main">${NAV.map(([id,ic])=>`<button class="ni ${k==id?'on':''} ${id=='integ'||id=='users'?'sub':''}" data-a="go" data-k="${id}" title="${t(id)}"><i>${ic}</i><span class="lb">${t(id)}</span>${id=='alerts'?`<span class="bdg lb">${nbad()}</span>`:''}</button>`).join('')}</nav>
-<div class="sf"><button class="ni" data-a="tsb"><i>${st.sc?'»':'«'}</i><span class="lb">Collapse sidebar</span></button><button class="ni" data-a="acct"><i>⚙</i><span class="lb">Settings</span></button><button class="ni" data-a="logout"><i>⎋</i><span class="lb">Log out</span></button><div class="usr"><div class="av">AS</div><div class="lb"><b>A. Samarasinghe</b><br><small>${ROLES[st.role]}</small></div></div></div></aside>
+function shell(){const k=st.screen,isVmr=k==='vmr';
+return `<aside class="side ${st.sc?'c':''}"><div class="brand"><div class="logo">C</div><div class="lb"><b>CIABOC</b><small>Management Intelligence</small></div></div><nav class="nav" aria-label="Main">${NAV.map(([id,ic])=>`<button class="ni ${k==id?'on':''} ${id=='integ'||id=='users'?'sub':''}" data-a="go" data-k="${id}" title="${t(id)}"><i>${ic}</i><span class="lb">${t(id)}</span>${id=='alerts'&&!isVmr?`<span class="bdg lb">${nbad()}</span>`:''}</button>`).join('')}</nav>
+<div class="sf"><button class="ni" data-a="tsb"><i>${st.sc?'»':'«'}</i><span class="lb">Collapse sidebar</span></button>${isVmr?'':'<button class="ni" data-a="acct"><i>⚙</i><span class="lb">Settings</span></button>'}<button class="ni" data-a="logout"><i>⎋</i><span class="lb">Log out</span></button>${isVmr?'':`<div class="usr"><div class="av">AS</div><div class="lb"><b>A. Samarasinghe</b><br><small>${ROLES[st.role]}</small></div></div>`}</div></aside>
 <div class="main"><header class="top"><div class="tt"><div class="bc">CIABOC / ${k=='integ'||k=='users'?t('admin')+' / ':''}${t(k)}</div><h1>${t(k)}</h1></div>
-<input class="srch" type="search" placeholder="${t('search')}" aria-label="Global search" data-a="gs">
-<select data-a="per" aria-label="Reporting period"><option value="3" ${st.n==3?'selected':''}>Last 3 months</option><option value="6" ${st.n==6?'selected':''}>Last 6 months</option><option value="12" ${st.n==12?'selected':''}>Last 12 months (Dec 25 – Nov 26)</option></select>
-<label class="sub"><input type="checkbox" data-a="cmp" ${st.cmp?'checked':''}> Compare to previous</label>
+${isVmr?'':`<input class="srch" type="search" placeholder="${t('search')}" aria-label="Global search" data-a="gs">`}
+${isVmr?'':`<select data-a="per" aria-label="Reporting period"><option value="3" ${st.n==3?'selected':''}>Last 3 months</option><option value="6" ${st.n==6?'selected':''}>Last 6 months</option><option value="12" ${st.n==12?'selected':''}>Last 12 months (Dec 25 – Nov 26)</option></select>
+<label class="sub"><input type="checkbox" data-a="cmp" ${st.cmp?'checked':''}> Compare to previous</label>`}
 <select data-a="lang" aria-label="Language"><option value="en" ${st.lang=='en'?'selected':''}>English</option><option value="si" ${st.lang=='si'?'selected':''}>සිංහල</option><option value="ta" ${st.lang=='ta'?'selected':''}>தமிழ்</option></select>
-<button class="ib" data-a="bell" aria-label="Notifications">🔔<span class="bdg">${nbad()}</span></button><button class="ib" data-a="prof">AS ▾</button></header>
+${isVmr?'':`<button class="ib" data-a="bell" aria-label="Notifications">🔔<span class="bdg">${nbad()}</span></button><button class="ib" data-a="prof">AS ▾</button>`}</header>
 ${st.nt?`<div class="pop"><h4>Notifications</h4>${A.filter(a=>a.st=='New').map(a=>`<button data-a="alert" data-k="${a.id}">${chip(a.sev,sevC[a.sev])} ${a.t}<small>${a.dept} · ${a.cr}</small></button>`).join('')||'<div class="empty">You’re up to date. New alerts appear here.</div>'}<button data-a="go" data-k="alerts"><b>View all alerts</b></button></div>`:''}
 ${st.pm?`<div class="pop"><h4>${ROLES[st.role]}</h4><small style="margin:0 8px 6px">Demo: switch role to preview role-aware access</small>${Object.keys(ROLES).map(r=>`<button data-a="role" data-k="${r}">${r==st.role?'✓ ':''}${ROLES[r]}</button>`).join('')}<hr><button data-a="acct">Account settings</button><button data-a="logout">Log out</button></div>`:''}
-<main class="pg1">${page()}</main></div>${st.md?modal():''}${st.dr?drawer():''}`}
+<main class="pg1${isVmr?' vmr-workspace':''}">${page()}</main></div>${st.md?modal():''}${st.dr?drawer():''}`}
 function modal(){const{k,v}=st.md,n=parseFloat(String(v).replace(/,/g,'')),pc=/%/.test(v),R=[['Investigation',.32],['Preliminary examination',.24],['Legal & prosecution support',.18],['Declarations & verification',.14],['Regional offices',.12]];
 return `<div class="ov" data-a="close"><div class="md" data-a="stay" role="dialog" aria-label="Breakdown"><h3>${k}</h3><p class="sub">Approved aggregate breakdown · total ${v} · de-identified</p>${prog(R.map(([n2,r])=>({n:n2,v:pc?+(n+(r-.2)*20).toFixed(1):Math.round(n*r),m:pc?100:n*.4})),'Division',pc?'%':'')}<div class="note">Case-level and personal records are restricted. Request elevated access through your Director.</div><button class="btn" data-a="close">Close</button></div></div>`}
 function drawer(){const d=st.dr;if(d.t=='a'){const a=A.find(x=>x.id==d.id);return `<div class="dr" role="dialog"><button class="btn o s" data-a="close" style="float:right">Close</button><h3>${a.id}</h3><p>${a.t}</p><p>${chip(a.sev,sevC[a.sev])} ${chip(a.st,'in')} ${chip('Escalation: '+a.esc)}</p><p class="sub">${a.cat} · ${a.dept} · Created ${a.cr}<br>Owner: ${a.own}</p><b>Action timeline</b><div class="tl">${a.log.map(l=>`<div>● ${l}</div>`).join('')}</div>${a.ev?`<p><b>Closure evidence:</b> ${a.ev}</p>`:''}
 ${a.st!='Resolved'?`<div class="fl"><button class="btn s" data-a="ack" data-k="${a.id}" ${a.st!='New'?'disabled':''}>Acknowledge</button><select id="own"><option>Director, Preliminary Examination</option><option>Director, Finance</option><option>Director, Planning</option><option>Data administrator</option></select><button class="btn s o" data-a="asg" data-k="${a.id}">Assign</button><button class="btn s o" data-a="esc" data-k="${a.id}" ${a.esc!='None'?'disabled':''}>Escalate to DG</button></div><label class="sub">Closure evidence (required to resolve)</label><input id="ev" class="srch" style="width:100%;margin:4px 0 8px" placeholder="e.g. Reconciliation report ref"><button class="btn" data-a="res" data-k="${a.id}">Mark resolved</button>`:''}</div>`}
 const s=SYS.find(x=>x[0]==d.id);return `<div class="dr" role="dialog"><button class="btn o s" data-a="close" style="float:right">Close</button><h3>${s[0]} · ${s[1]}</h3><p>${st2(s[2])}</p><p>Last successful sync: ${s[3]}<br>Data freshness: ${s[4]}<br>Failed attempts (7 d): ${s[5]}<br>Source availability: ${s[6]}%</p>${s[2]!='Healthy'?`<div class="note e">Figures from this source are delayed. Dashboards show a “Delayed” label until the next successful sync.</div>`:''}<button class="btn" data-a="sync" data-k="${s[0]}">Sync now</button></div>`}
 function login(){return `<div class="ct"><div class="lc"><div class="logo" style="width:52px;height:52px;font-size:24px">C</div><h2>CIABOC Management Intelligence</h2><p class="sub">Commission to Investigate Allegations of Bribery or Corruption · Sri Lanka</p><button class="btn" data-a="go" data-k="overview">Sign in with CIABOC Account</button><p class="sub" style="margin-top:12px">Single sign-on with multi-factor authentication. Access is limited to authorized officers and every session is logged.</p><p><a href="#" data-a="forgot">Forgot password?</a></p><div class="note">Prototype with fictional sample data. Figures do not represent actual CIABOC statistics.</div></div></div>`}
-function render(){document.getElementById('app').innerHTML=st.screen=='login'?login():shell()}
+function render(){
+  document.getElementById('app').innerHTML=st.screen=='login'?login():shell();
+  const livePanel=document.getElementById('vmr-live');
+  if(livePanel)vmrLive.mount(livePanel,{months:st.n,compare:st.cmp});
+  else vmrLive.unmount();
+}
+window.addEventListener('message',event=>{
+  if(window.parent===window||event.source!==window.parent||event.origin!==location.origin)return;
+  if(event.data?.type==='ciaboc:vmr-api'&&vmrLive.connect(event.data.apiBase)&&st.screen==='vmr')render();
+});
+if(window.parent!==window)window.parent.postMessage({type:'ciaboc:vmr-ready'},location.origin);
 function toast(m){const e=document.getElementById('toast');e.textContent=m;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',2400)}
 const now=()=>'22 Nov 2026, '+new Date().toTimeString().slice(0,5),al=id=>A.find(a=>a.id==id);
 function act(a,k,i){const A1=al(k);switch(a){
@@ -234,9 +228,10 @@ case'asg':A1.own=document.getElementById('own').value;A1.st='Assigned';A1.log.pu
 case'esc':A1.esc='Escalated to DG';A1.log.push('Escalated to DG');toast(k+' escalated');break;
 case'res':{const v=document.getElementById('ev').value.trim();if(!v){toast('Add closure evidence before resolving');return}A1.st='Resolved';A1.ev=v;A1.log.push('Resolved with evidence');toast(k+' resolved');break}
 case'sev':st.sev=k;break;case'tab':st.tab=k;break;case'role':st.role=k;st.pm=false;if(!ACC[k].includes(st.screen))st.screen='overview';toast('Viewing as '+ROLES[k]);break;
-case'logout':st=Object.assign(st,{screen:'login',pm:false,nt:false});break;
+case'logout':vmrLive.disconnect();st=Object.assign(st,{screen:'login',pm:false,nt:false});break;
+case'vmrrefresh':void vmrLive.refresh();return;
 case'sync':{const s=SYS.find(x=>x[0]==k);s[2]='Healthy';s[3]='22 Nov '+new Date().toTimeString().slice(0,5);s[4]='0 min';s[5]=0;toast(k+' synchronized');break}
-case'exp':toast('Aggregate report export queued (sample)');return;case'ops':toast('Opens the role-authorized operational screen in the Reception system (not part of this prototype)');return;case'acct':toast('Account settings open here (prototype)');st.pm=false;break;case'forgot':toast('Password reset link sent to your CIABOC email (sample)');return;
+case'exp':toast('Aggregate report export queued (sample)');return;case'acct':toast('Account settings open here (prototype)');st.pm=false;break;case'forgot':toast('Password reset link sent to your CIABOC email (sample)');return;
 case'sort':{const x=T[k];x.d=x.s==+i?-x.d:1;x.s=+i;document.getElementById('tb_'+k).innerHTML=tb(k);return}
 case'pp':{T[k].p=Math.max(0,T[k].p+ +i);document.getElementById('tb_'+k).innerHTML=tb(k);return}
 default:return}render()}
@@ -246,7 +241,9 @@ if(el.dataset.a=='stay'||(el.dataset.a=='close'&&e.target.closest('.md')&&!e.tar
 if(['q','gs','per','lang','div','urole','cmp'].includes(el.dataset.a)||el.tagName=='SELECT'||el.tagName=='INPUT')return;act(el.dataset.a,el.dataset.k,el.dataset.i)});
 document.addEventListener('input',e=>{const el=e.target;if(el.dataset.a=='q'){T[el.dataset.k].q=el.value;T[el.dataset.k].p=0;document.getElementById('tb_'+el.dataset.k).innerHTML=tb(el.dataset.k)}});
 document.addEventListener('change',e=>{const el=e.target,a=el.dataset.a;if(!a)return;
-if(a=='per')st.n=+el.value;else if(a=='lang'){st.lang=el.value;toast({en:'Language: English',si:'භාෂාව: සිංහල',ta:'மொழி: தமிழ்'}[st.lang])}else if(a=='div')st.div=el.value;else if(a=='vdir')st.vdir=el.value;else if(a=='cmp')st.cmp=el.checked;
-else if(a=='urole'){U[+el.dataset.k][1]=el.value;toast('Role updated and logged in audit trail')}else return;render()});
+if(a=='per')st.n=+el.value;else if(a=='lang'){st.lang=el.value;toast({en:'Language: English',si:'භාෂාව: සිංහල',ta:'மொழி: தமிழ்'}[st.lang])}else if(a=='div')st.div=el.value;else if(a=='cmp')st.cmp=el.checked;
+else if(a=='urole'){U[+el.dataset.k][1]=el.value;toast('Role updated and logged in audit trail')}else return;
+if(st.screen==='vmr'&&(a==='per'||a==='cmp'))vmrLive.mount(document.getElementById('vmr-live'),{months:st.n,compare:st.cmp});
+else render()});
 render();
 </script></body></html>

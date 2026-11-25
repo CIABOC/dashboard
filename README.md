@@ -72,6 +72,23 @@ mvn test
 - `http://localhost:8080/api/v1/kpis`
 - `http://localhost:8080/api/v1/executive/overview`
 
+## Live Vehicle Movement & Reception demo
+
+Start the dashboard backend with the Atlas URI in its environment. In PowerShell, use the path to the credential file you received and run this from `backend/`.
+
+```powershell
+$atlasFile = 'C:/path/to/atlas-credentials.env'
+$uriLine = Get-Content -LiteralPath $atlasFile | Where-Object { $_ -match '^\s*MONGODB_URI\s*=' } | Select-Object -First 1
+$env:VMR_ATLAS_URI = ($uriLine -split '=', 2)[1].Trim().Trim([char]34, [char]39)
+mvn spring-boot:run
+```
+
+Sign in to the dashboard and open **Vehicle Movement & Reception**. It fetches aggregate counts through Spring Boot, refreshes every 30 seconds while the report is open, and also has a manual refresh button. Use an Atlas account with read access to the RMS database and allow the demo backend's connection in Atlas.
+
+The backend defaults to the RMS Atlas database `ciaboc_rvm` and reads the `visit` and `vehicle_movement` collections. Override these names with `VMR_ATLAS_DATABASE`, `VMR_ATLAS_VISITS_COLLECTION`, or `VMR_ATLAS_MOVEMENTS_COLLECTION` for a different deployment. The feed uses `visitDate`, `status`, `entryApprovedAt`, `occurredAt`, `direction`, and `decision`. The equivalent snake-case fields are also supported.
+
+Vehicle Movement & Reception shows MongoDB results after a successful fetch. If Atlas is unreachable or `VMR_ATLAS_URI` is missing, the page shows the connection status. The other dashboard modules keep their existing sources.
+
 ## Temporary Local Login
 
 Until CIABOC SSO is configured, the login page also accepts environment-controlled local credentials:
