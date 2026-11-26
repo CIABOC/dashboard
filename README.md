@@ -39,6 +39,7 @@ docker exec ciaboc-dashboard-db psql -U ciaboc -d ciaboc_dashboard -c "SELECT 1;
 ```
 
 The container uses database `ciaboc_dashboard` and role `ciaboc`.
+If the container was stopped, run `docker start ciaboc-dashboard-db`. The dashboard needs PostgreSQL for sign-in even when Vehicle Movement & Reception reads its report data from Atlas.
 
 ## Backend
 
@@ -74,13 +75,10 @@ mvn test
 
 ## Live Vehicle Movement & Reception demo
 
-Start the dashboard backend with the Atlas URI in its environment. In PowerShell, use the path to the credential file you received and run this from `backend/`.
+Stop any running dashboard backend before starting the Atlas demo. In PowerShell, run this from `backend/`, using the path to the credential file you received. The launcher reads `MONGODB_URI` and passes it to Spring Boot as `VMR_ATLAS_URI`.
 
 ```powershell
-$atlasFile = 'C:/path/to/atlas-credentials.env'
-$uriLine = Get-Content -LiteralPath $atlasFile | Where-Object { $_ -match '^\s*MONGODB_URI\s*=' } | Select-Object -First 1
-$env:VMR_ATLAS_URI = ($uriLine -split '=', 2)[1].Trim().Trim([char]34, [char]39)
-mvn spring-boot:run
+.\start-atlas-demo.ps1 -AtlasCredentialsFile 'C:/path/to/atlas-credentials.env'
 ```
 
 Sign in to the dashboard and open **Vehicle Movement & Reception**. It fetches aggregate counts through Spring Boot, refreshes every 30 seconds while the report is open, and also has a manual refresh button. Use an Atlas account with read access to the RMS database and allow the demo backend's connection in Atlas.

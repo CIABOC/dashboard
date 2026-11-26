@@ -1,40 +1,22 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>CIABOC Management Dashboard – Prototype</title>
 <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=Noto+Sans+Sinhala:wght@400;600&family=Noto+Sans+Tamil:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/dashboard.css">
 <link rel="stylesheet" href="/vmr.css">
 <style>
 :root{--b:#0F3D63;--g:#C89B3C;--t:#1D6FA5;--bg:#F5F7FA;--tx:#2D3748;--bd:#E2E8F0;--mu:#5B6B7F;--ok:#2E7D5B;--w:#A15F0A;--r:#B3261E;color-scheme:light}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.45 'Source Sans 3','Noto Sans Sinhala','Noto Sans Tamil',system-ui,sans-serif}
 button,select,input{font:inherit;color:inherit}button{cursor:pointer}:focus-visible{outline:2px solid var(--g);outline-offset:2px}
 #app{display:flex;min-height:100vh}
-.side{width:260px;background:var(--b);color:#fff;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;flex:none;transition:width .2s;overflow-y:auto}
-.side.c{width:68px}.side.c .lb{display:none}
-.brand{display:flex;gap:10px;align-items:center;padding:16px;border-bottom:1px solid #ffffff22}
 .logo{width:36px;height:36px;border-radius:9px;background:var(--g);color:var(--b);display:grid;place-items:center;font-weight:700;flex:none}
-.brand b{display:block;font-size:15px}.brand small{opacity:.75;font-size:11px}
-.nav{flex:1;padding:8px}.ni{display:flex;gap:10px;align-items:center;width:100%;padding:9px 10px;margin:1px 0;border:0;border-left:3px solid transparent;border-radius:8px;background:none;color:#D5E2EE;text-align:left}
-.ni:hover{background:#ffffff14}.ni.on{background:#ffffff1f;color:#fff;border-left-color:var(--g);font-weight:600}.ni.sub{margin-left:18px;width:calc(100% - 18px);font-size:13px}
-.ni i{width:20px;text-align:center;font-style:normal;flex:none}.bdg{margin-left:auto;background:var(--r);border-radius:9px;padding:0 6px;font-size:11px}
-.sf{padding:10px;border-top:1px solid #ffffff22}.sf .ni{padding:7px 10px}
-.usr{display:flex;gap:10px;align-items:center;padding:8px 10px}.av{width:32px;height:32px;border-radius:50%;background:var(--t);display:grid;place-items:center;font-weight:700;flex:none}
-.main{flex:1;min-width:0}
-.top{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--bd);display:flex;gap:12px;align-items:center;padding:10px 24px;flex-wrap:wrap}
-.top h1{font-size:19px;margin:0;color:var(--b)}.bc{font-size:12px;color:var(--mu)}.tt{margin-right:auto}
-.srch,.top select,.fl select{border:1px solid var(--bd);border-radius:8px;padding:7px 10px;background:#fff}.top .srch{width:210px}
-.ib{position:relative;border:1px solid var(--bd);background:#fff;border-radius:8px;padding:6px 10px}.ib .bdg{position:absolute;top:-6px;right:-6px;color:#fff}
+.srch,.fl select{border:1px solid var(--bd);border-radius:8px;padding:7px 10px;background:#fff}
 .pop{position:absolute;right:24px;top:58px;width:340px;background:#fff;border:1px solid var(--bd);border-radius:12px;box-shadow:0 12px 32px #0f3d6326;z-index:9;padding:8px}
 .pop h4{margin:6px 8px;color:var(--b)}.pop button{display:block;width:100%;text-align:left;background:none;border:0;border-radius:8px;padding:8px}.pop button:hover{background:var(--bg)}.pop small{color:var(--mu);display:block}
-.pg1{padding:20px 24px 40px}.ph{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
 .btn{border:1px solid var(--b);background:var(--b);color:#fff;border-radius:8px;padding:7px 14px;font-weight:600}.btn.o{background:#fff;color:var(--b)}.btn.s{padding:3px 9px;font-size:12px}.btn:disabled{opacity:.45;cursor:not-allowed}
 .chip{display:inline-block;border-radius:20px;padding:1px 10px;font-size:12px;font-weight:600;background:#EDF2F7;white-space:nowrap}
 .ok{background:#E3F3EB;color:var(--ok)}.wn{background:#FFF1DB;color:var(--w)}.er{background:#FCE4E2;color:var(--r)}.in{background:#E1EEF7;color:var(--t)}
 .fl{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:14px;font-size:13px}
 .note{background:#FFF8E6;border:1px solid #EBD9A8;border-radius:8px;padding:8px 12px;font-size:12.5px;margin-bottom:14px}.note.e{background:#FCE4E2;border-color:#F0B8B4}
-.g{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}.s2{grid-column:span 2}.s3{grid-column:span 3}.s6{grid-column:1/-1}
-.kr{grid-column:1/-1;display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px}
-.card,.kpi{background:#fff;border:1px solid var(--bd);border-radius:12px;box-shadow:0 1px 3px #0f3d6314;padding:16px;min-width:0}
-.kpi{display:block;text-align:left;border-top:3px solid var(--g)}.kpi:hover{border-color:var(--t);box-shadow:0 4px 12px #0f3d631f}.kpi span{color:var(--mu);font-size:13px}.kpi b{display:block;font-size:27px;color:var(--b)}
-.kpi em{font-style:normal;font-size:12px}.up{color:var(--ok)}.dn{color:var(--r)}.kpi small{color:var(--mu)}
-.ch{display:flex;justify-content:space-between;gap:8px;margin-bottom:10px}.ch h3{margin:0;font-size:15px;color:var(--b)}.sub{font-size:12px;color:var(--mu)}
+.sub{font-size:12px;color:var(--mu)}
 .cv{width:100%;height:auto}.hit{cursor:pointer}rect.hit:hover,circle.hit:hover{opacity:.75}
 .lg{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--mu);margin-top:4px}.lg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px}
 .dn{}.dn2{display:flex;gap:16px;align-items:center;flex-wrap:wrap}.lg.v{flex-direction:column;gap:6px;list-style:none;padding:0;margin:0;flex:1;min-width:150px}.lg.v li{display:flex;color:var(--tx);font-size:13px}.lg.v b{margin-left:auto;padding-left:10px}
@@ -52,10 +34,9 @@ button,select,input{font:inherit;color:inherit}button{cursor:pointer}:focus-visi
 .lc h2{margin:14px 0 4px;color:var(--b)}.lc .btn{width:100%;padding:11px;margin-top:14px}
 .sk{height:110px;border-radius:12px;background:linear-gradient(90deg,#E8EDF3,#F5F7FA,#E8EDF3);background-size:200% 100%;animation:sh 1.2s infinite}@keyframes sh{to{background-position:-200% 0}}
 #toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--b);color:#fff;padding:10px 18px;border-radius:10px;z-index:30;display:none}
-@media(max-width:1100px){.side{width:68px}.side .lb{display:none}.g{grid-template-columns:repeat(2,1fr)}.s2,.s3{grid-column:span 1}.s6{grid-column:1/-1}.top{padding:10px 14px}.pg1{padding:16px 14px}}
-@media(max-width:700px){.g{grid-template-columns:1fr}.s2,.s3{grid-column:auto}.top .srch{width:100%}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style></head><body><div id="app"></div><div id="toast" role="status"></div>
+<script src="/dashboard-icons.js"></script>
 <script src="/vmr-view.js"></script>
 <script src="/vmr-live.js"></script>
 <script>
@@ -64,12 +45,20 @@ const st={screen:location.hash=='#authenticated'?'overview':'login',n:12,lang:'e
 const MO=['Dec','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov'];
 const intake=[212,198,241,230,256,248,269,251,278,264,283,291],prevIn=intake.map((v,i)=>Math.round(v*(.86+.02*(i%3)))),closed=[170,181,190,204,199,221,230,226,240,238,252,259];
 const S=a=>a.slice(-st.n),sum=a=>a.reduce((x,y)=>x+y,0),gen=(n,b,a,s)=>Array.from({length:n},(_,i)=>Math.round(b+a*Math.sin(i*1.3+s)+i*a/6)),h=s=>[...s].reduce((a,c)=>a*31+c.charCodeAt(0)|0,7);
-const NAV=[['overview','▦'],['vmr','⇥'],['complaints','✉'],['eald','☑'],['hr','☺'],['finance','₨'],['assets','▣'],['plan','◎'],['digital','☁'],['ict','⛨'],['lkeh','⌖'],['admin','⚙'],['integ','⇄'],['users','☷'],['alerts','⚑']];
+const compactNav=window.matchMedia('(max-width: 1100px)');
+st.sc=compactNav.matches;
+const NAV_GROUPS=[
+  {label:{en:'Management',si:'කළමනාකරණය',ta:'முகாமைத்துவம்'},screens:['overview','vmr','complaints','eald']},
+  {label:{en:'Operations',si:'මෙහෙයුම්',ta:'செயல்பாடுகள்'},screens:['hr','finance','assets','plan','digital','ict','lkeh','admin']},
+  {label:{en:'System & access',si:'පද්ධතිය සහ ප්‍රවේශය',ta:'அமைப்பும் அணுகலும்'},screens:['integ','users','alerts']},
+];
+const NAV=NAV_GROUPS.flatMap(group=>group.screens);
+const dashboardIcon=window.dashboardIcon;
 const L={en:{overview:'Executive Overview',vmr:'Vehicle Movement & Reception',complaints:'Complaints & Cases',eald:'e-ALD',hr:'Human Resources',finance:'Finance',assets:'Assets & Inventory',plan:'Planning & Performance',digital:'Digital Services',ict:'ICT & Cybersecurity',lkeh:'Institutional Reference Data (LKEH)',admin:'Administration',integ:'Data Integration & System Health',users:'User & Access Management',alerts:'Alerts & Decision Support',search:'Search indicators, reports…'},
 si:{overview:'විධායක දළ විශ්ලේෂණය',vmr:'වාහන ගමනාගමනය සහ පිළිගැනීම',complaints:'පැමිණිලි සහ නඩු',eald:'e-ALD',hr:'මානව සම්පත්',finance:'මුදල්',assets:'වත්කම් සහ බඩු තොග',plan:'සැලසුම් සහ කාර්යසාධනය',digital:'ඩිජිටල් සේවා',ict:'ICT සහ සයිබර් ආරක්ෂාව',lkeh:'ආයතනික යොමු දත්ත (LKEH)',admin:'පරිපාලනය',integ:'දත්ත ඒකාබද්ධතාව සහ පද්ධති සෞඛ්‍යය',users:'පරිශීලක සහ ප්‍රවේශ කළමනාකරණය',alerts:'ඇඟවීම් සහ තීරණ සහාය',search:'සොයන්න…'},
 ta:{overview:'நிர்வாகச் சுருக்கம்',vmr:'வாகன நடமாட்டம் & வரவேற்பு',complaints:'முறைப்பாடுகள் & வழக்குகள்',eald:'e-ALD',hr:'மனிதவளம்',finance:'நிதி',assets:'சொத்துகள் & இருப்பு',plan:'திட்டமிடல் & செயல்திறன்',digital:'எண்ணிம சேவைகள்',ict:'ICT & இணையப் பாதுகாப்பு',lkeh:'நிறுவனக் குறிப்புத் தரவு (LKEH)',admin:'நிர்வாகம்',integ:'தரவு ஒருங்கிணைப்பு & கணினி நலம்',users:'பயனர் & அணுகல் மேலாண்மை',alerts:'எச்சரிக்கைகள் & முடிவு ஆதரவு',search:'தேடுக…'}};
 const ROLES={dg:'Director General',cm:'Commission Member',dir:'Director',ict:'ICT / Data Administrator'};
-const ACC={dg:NAV.map(x=>x[0]),cm:['overview','vmr','complaints','eald','hr','finance','assets','plan','digital','ict','lkeh','admin','alerts'],dir:['overview','vmr','complaints','eald','plan','assets','admin','alerts'],ict:['overview','digital','ict','lkeh','integ','users','alerts']};
+const ACC={dg:NAV,cm:['overview','vmr','complaints','eald','hr','finance','assets','plan','digital','ict','lkeh','admin','alerts'],dir:['overview','vmr','complaints','eald','plan','assets','admin','alerts'],ict:['overview','digital','ict','lkeh','integ','users','alerts']};
 const t=k=>L[st.lang][k]||L.en[k];
 let A=[{id:'A-1042',t:'Finance source sync delayed 26 hours',sev:'Critical',cat:'Integration',dept:'Finance',cr:'21 Nov 2026',own:'Unassigned',st:'New',esc:'None',log:['Raised by integration monitor']},
 {id:'A-1041',t:'Complaint closure rate 6% below quarterly target',sev:'High',cat:'Performance',dept:'Complaints & Cases',cr:'20 Nov 2026',own:'Director, Preliminary Examination',st:'Assigned',esc:'None',log:['Raised by KPI rule','Assigned to owner']},
@@ -86,8 +75,8 @@ const DIV={'All divisions':1,'Preliminary Examination':.34,'Investigation':.41,'
 // ---------- components
 const chip=(x,c='')=>`<span class="chip ${c}">${x}</span>`,lg=I=>`<div class="lg">${I.map(([n,c])=>`<span><i style="background:${c}"></i>${n}</span>`).join('')}</div>`;
 const sevC={Critical:'er',High:'wn',Medium:'in',Low:''};
-const kpi=(l,v)=>{const d=((Math.abs(h(l))%90)/10-3).toFixed(1);return `<button class="kpi hit" data-a="drill" data-k="${l}" data-v="${v}"><span>${l}</span><b>${v}</b><em class="${d>=0?'up':'dn'}">${d>=0?'▲':'▼'} ${Math.abs(d)}%<small> vs previous period</small></em></button>`};
-const kr=(...a)=>`<div class="kr">${a.join('')}</div>`,card=(ti,b,sp='s3',su='')=>`<section class="card ${sp}"><div class="ch"><h3>${ti}</h3><span class="sub">${su}</span></div>${b}</section>`;
+const kpi=(l,v)=>{const d=((Math.abs(h(l))%90)/10-3).toFixed(1);return `<button class="kpi hit" data-a="drill" data-k="${l}" data-v="${v}"><span class="kpi-label">${l}</span><b class="kpi-value">${v}</b><em><span class="${d>=0?'up':'dn'}">${d>=0?'+':'−'}${Math.abs(d)}%</span> vs previous period</em></button>`};
+const kr=(...a)=>`<div class="kr${a.length===6?' kr-six':''}">${a.join('')}</div>`,card=(ti,b,sp='s3',su='')=>`<section class="card ${sp}"><div class="ch"><h3>${ti}</h3><span class="sub">${su}</span></div>${b}</section>`;
 function bars(l,v,k,p){const W=520,H=150,mx=Math.max(...v,...(p||[0]))*1.1,bw=W/l.length;let s=`<svg viewBox="0 0 ${W} ${H+22}" class="cv" role="img" aria-label="${k} bar chart">`;[0,.5,1].forEach(f=>s+=`<line x1="0" x2="${W}" y1="${H-H*f}" y2="${H-H*f}" stroke="#E2E8F0"/>`);
 l.forEach((a,i)=>{const w=bw*(p?.36:.7),x=i*bw+bw*.12;if(p)s+=`<rect x="${x}" y="${H-p[i]/mx*H}" width="${w}" height="${p[i]/mx*H}" fill="#CBD5E0" rx="2"><title>Previous: ${p[i]}</title></rect>`;const hh=v[i]/mx*H;s+=`<rect class="hit" data-a="drill" data-k="${k} – ${a}" data-v="${v[i]}" x="${x+(p?w+2:0)}" y="${H-hh}" width="${w}" height="${hh}" fill="${C.b}" rx="2"><title>${a}: ${v[i]}</title></rect><text x="${i*bw+bw/2}" y="${H+15}" text-anchor="middle" font-size="10" fill="#5B6B7F">${a}</text>`});return s+'</svg>'}
 function line(l,Q,k){const W=520,H=150,all=Q.flatMap(x=>x.v),mn=Math.min(...all)*.9,mx=Math.max(...all)*1.05,sx=i=>20+i*(W-40)/(l.length-1),sy=v=>H-(v-mn)/(mx-mn)*H;
@@ -175,7 +164,7 @@ integ:()=>g((SYS.some(s=>s[2]=='Delayed')?'<div class="note e s6"><b>Finance sou
 +tbl('rh','Refresh history',['Time','System','Result','Duration'],[['22 Nov 08:20','ICT',chip('Success','ok'),'41 s'],['22 Nov 08:15','CTS',chip('Success','ok'),'1 m 12 s'],['22 Nov 08:10','e-ALD',chip('Success','ok'),'58 s'],['22 Nov 02:00','LKEH',chip('Partial','wn'),'3 m 04 s'],['21 Nov 18:00','Finance',chip('Failed','er'),'timeout'],['21 Nov 12:00','Finance',chip('Failed','er'),'timeout'],['21 Nov 06:10','Finance',chip('Success','ok'),'2 m 20 s']])),
 users:()=>{const tabs=['Users','Roles & permissions','Access history','Audit logs'];let b;
 if(st.tab=='Users')b=tbl('us','Users',['Name','Role','Division','Status','Change role'],U.map((u,i)=>[u[0],u[1],u[2],st2(u[3]),`<select data-a="urole" data-k="${i}">${RN.map(r=>`<option ${r==u[1]?'selected':''}>${r}</option>`).join('')}</select>`]));
-else if(st.tab=='Roles & permissions'){const M=NAV.slice(0,12).map(x=>x[0]);b=`<section class="card s6"><div class="tw"><table><thead><tr><th>Module</th>${Object.values(ROLES).map(r=>`<th>${r}</th>`).join('')}</tr></thead><tbody>${M.map(m=>`<tr><td>${t(m)}</td>${Object.keys(ROLES).map(r=>`<td>${ACC[r].includes(m)?'● View aggregate':'— No access'}</td>`).join('')}</tr>`).join('')}</tbody></table></div></section>`}
+else if(st.tab=='Roles & permissions'){const M=NAV.slice(0,12);b=`<section class="card s6"><div class="tw"><table><thead><tr><th>Module</th>${Object.values(ROLES).map(r=>`<th>${r}</th>`).join('')}</tr></thead><tbody>${M.map(m=>`<tr><td>${t(m)}</td>${Object.keys(ROLES).map(r=>`<td>${ACC[r].includes(m)?'● View aggregate':'— No access'}</td>`).join('')}</tr>`).join('')}</tbody></table></div></section>`}
 else b=tbl(st.tab=='Audit logs'?'au':'ah',st.tab,['Time','User','Action','Detail'],st.tab=='Audit logs'?[['22 Nov 08:02','R. Dissanayake','Role changed','T. Senanayake → Director'],['21 Nov 16:40','A. Samarasinghe','Export','Aggregate complaints report'],['21 Nov 11:12','M. Fernando','Alert acknowledged','A-1037'],['20 Nov 09:30','R. Dissanayake','Sync retried','Finance'],['19 Nov 15:05','N. Wijesekara','Settings','Language changed to Sinhala']]:[['22 Nov 08:00','A. Samarasinghe','Sign in (SSO)','Success'],['22 Nov 07:45','S. Jeyakumar','Sign in (SSO)','Success'],['21 Nov 22:10','Unknown','Sign in','Blocked – 3 failed attempts'],['21 Nov 09:03','K. Ratnayake','Sign in (SSO)','Success']]);
 return `<div class="tabs">${tabs.map(x=>`<button class="${x==st.tab?'on':''}" data-a="tab" data-k="${x}">${x}</button>`).join('')}</div>`+g(b)}};
 // ---------- shell
@@ -185,20 +174,45 @@ function page(){const k=st.screen;
 if(k==='vmr')return '<div id="vmr-live"></div>';
 const f=FR[k]||['Current · updated 22 Nov 2026, 08:15','ok'],ex=st.role!='dir';
 const body=!ACC[st.role].includes(k)?noperm(k):st.load?g('<div class="sk s2"></div>'.repeat(6)):SC[k]();
-return `<div class="ph"><span class="chip ${f[1]}">${f[0]}</span><span class="sub">Sample data · fictional</span><span style="margin-left:auto"></span><button class="btn o" data-a="exp" ${ex?'':'disabled title="Export needs an authorized role"'}>Export aggregate report</button></div>`+body}
+return `<div class="dashboard-toolbar"><div class="dashboard-status"><span class="chip ${f[1]}">${f[0]}</span><span class="sub">Sample data · fictional</span></div><button class="btn o" data-a="exp" ${ex?'':'disabled title="Export needs an authorized role"'}>${dashboardIcon('download')} Export aggregate report</button></div>`+body}
 const nbad=()=>A.filter(a=>a.st=='New').length;
+function sideAction(action,icon,label,attributes=''){
+  return `<button class="ni" type="button" data-a="${action}" aria-label="${label}" title="${label}" ${attributes}>${dashboardIcon(icon)}<span class="nav-text">${label}</span></button>`;
+}
+function sidebar(k,isVmr){
+  const navGroups=NAV_GROUPS.map(({label,screens})=>`<div class="nav-group" role="group" aria-label="${label[st.lang]}">
+    <p class="nav-group-title" aria-hidden="true">${label[st.lang]}</p>
+    ${screens.map(id=>`<button class="ni" type="button" data-a="go" data-k="${id}" title="${t(id)}" aria-label="${t(id)}"${k===id?' aria-current="page"':''}>
+      ${dashboardIcon(id)}<span class="nav-text">${t(id)}</span>${id==='alerts'&&!isVmr?`<span class="bdg">${nbad()}</span>`:''}
+    </button>`).join('')}
+  </div>`).join('');
+  const toggleLabel=st.sc?'Expand sidebar':'Collapse sidebar';
+  return `<aside class="side ${st.sc?'c':''}">
+    <div class="side-brand"><span class="side-brand-mark">${dashboardIcon('brand')}</span><div class="nav-text"><b>CIABOC</b><small>Management Intelligence</small></div></div>
+    <nav class="nav" id="dashboard-nav" aria-label="Main navigation" tabindex="0">${navGroups}</nav>
+    <div class="side-footer">
+      ${sideAction('tsb',st.sc?'expand':'collapse',toggleLabel,`aria-controls="dashboard-nav" aria-expanded="${!st.sc}"`)}
+      ${isVmr?'':sideAction('acct','settings','Settings')}
+      ${sideAction('logout','logout','Log out')}
+      ${isVmr?'':`<div class="side-profile"><span class="side-avatar" aria-hidden="true">AS</span>
+        <div class="side-profile-info"><b>A. Samarasinghe</b><small>${ROLES[st.role]}</small></div></div>`}
+    </div>
+  </aside>${compactNav.matches&&!st.sc?'<button class="nav-scrim" type="button" data-a="tsb" aria-label="Close navigation" tabindex="-1"></button>':''}`;
+}
 function shell(){const k=st.screen,isVmr=k==='vmr';
-return `<aside class="side ${st.sc?'c':''}"><div class="brand"><div class="logo">C</div><div class="lb"><b>CIABOC</b><small>Management Intelligence</small></div></div><nav class="nav" aria-label="Main">${NAV.map(([id,ic])=>`<button class="ni ${k==id?'on':''} ${id=='integ'||id=='users'?'sub':''}" data-a="go" data-k="${id}" title="${t(id)}"><i>${ic}</i><span class="lb">${t(id)}</span>${id=='alerts'&&!isVmr?`<span class="bdg lb">${nbad()}</span>`:''}</button>`).join('')}</nav>
-<div class="sf"><button class="ni" data-a="tsb"><i>${st.sc?'»':'«'}</i><span class="lb">Collapse sidebar</span></button>${isVmr?'':'<button class="ni" data-a="acct"><i>⚙</i><span class="lb">Settings</span></button>'}<button class="ni" data-a="logout"><i>⎋</i><span class="lb">Log out</span></button>${isVmr?'':`<div class="usr"><div class="av">AS</div><div class="lb"><b>A. Samarasinghe</b><br><small>${ROLES[st.role]}</small></div></div>`}</div></aside>
+return `${sidebar(k,isVmr)}
 <div class="main"><header class="top"><div class="tt"><div class="bc">CIABOC / ${k=='integ'||k=='users'?t('admin')+' / ':''}${t(k)}</div><h1>${t(k)}</h1></div>
-${isVmr?'':`<input class="srch" type="search" placeholder="${t('search')}" aria-label="Global search" data-a="gs">`}
-${isVmr?'':`<select data-a="per" aria-label="Reporting period"><option value="3" ${st.n==3?'selected':''}>Last 3 months</option><option value="6" ${st.n==6?'selected':''}>Last 6 months</option><option value="12" ${st.n==12?'selected':''}>Last 12 months (Dec 25 – Nov 26)</option></select>
-<label class="sub"><input type="checkbox" data-a="cmp" ${st.cmp?'checked':''}> Compare to previous</label>`}
+<div class="top-controls">
+${isVmr?'':`<label class="dashboard-search">${dashboardIcon('search')}<input type="search" placeholder="${t('search')}" aria-label="Global search" data-a="gs"></label>
+<select data-a="per" aria-label="Reporting period"><option value="3" ${st.n==3?'selected':''}>Last 3 months</option><option value="6" ${st.n==6?'selected':''}>Last 6 months</option><option value="12" ${st.n==12?'selected':''}>Last 12 months (Dec 25 – Nov 26)</option></select>
+<label class="top-check"><input type="checkbox" data-a="cmp" ${st.cmp?'checked':''}> Compare to previous</label>`}
 <select data-a="lang" aria-label="Language"><option value="en" ${st.lang=='en'?'selected':''}>English</option><option value="si" ${st.lang=='si'?'selected':''}>සිංහල</option><option value="ta" ${st.lang=='ta'?'selected':''}>தமிழ்</option></select>
-${isVmr?'':`<button class="ib" data-a="bell" aria-label="Notifications">🔔<span class="bdg">${nbad()}</span></button><button class="ib" data-a="prof">AS ▾</button>`}</header>
+${isVmr?'':`<button class="top-button" data-a="bell" aria-label="Notifications" aria-expanded="${st.nt}">${dashboardIcon('alerts')}<span class="bdg">${nbad()}</span></button><button class="top-button top-profile" data-a="prof" aria-label="Profile and roles" aria-expanded="${st.pm}">AS ${dashboardIcon('down')}</button>`}
+</div>
 ${st.nt?`<div class="pop"><h4>Notifications</h4>${A.filter(a=>a.st=='New').map(a=>`<button data-a="alert" data-k="${a.id}">${chip(a.sev,sevC[a.sev])} ${a.t}<small>${a.dept} · ${a.cr}</small></button>`).join('')||'<div class="empty">You’re up to date. New alerts appear here.</div>'}<button data-a="go" data-k="alerts"><b>View all alerts</b></button></div>`:''}
 ${st.pm?`<div class="pop"><h4>${ROLES[st.role]}</h4><small style="margin:0 8px 6px">Demo: switch role to preview role-aware access</small>${Object.keys(ROLES).map(r=>`<button data-a="role" data-k="${r}">${r==st.role?'✓ ':''}${ROLES[r]}</button>`).join('')}<hr><button data-a="acct">Account settings</button><button data-a="logout">Log out</button></div>`:''}
-<main class="pg1${isVmr?' vmr-workspace':''}">${page()}</main></div>${st.md?modal():''}${st.dr?drawer():''}`}
+</header>
+<main class="pg1${isVmr?' vmr-workspace':' dashboard-workspace'}">${page()}</main></div>${st.md?modal():''}${st.dr?drawer():''}`}
 function modal(){const{k,v}=st.md,n=parseFloat(String(v).replace(/,/g,'')),pc=/%/.test(v),R=[['Investigation',.32],['Preliminary examination',.24],['Legal & prosecution support',.18],['Declarations & verification',.14],['Regional offices',.12]];
 return `<div class="ov" data-a="close"><div class="md" data-a="stay" role="dialog" aria-label="Breakdown"><h3>${k}</h3><p class="sub">Approved aggregate breakdown · total ${v} · de-identified</p>${prog(R.map(([n2,r])=>({n:n2,v:pc?+(n+(r-.2)*20).toFixed(1):Math.round(n*r),m:pc?100:n*.4})),'Division',pc?'%':'')}<div class="note">Case-level and personal records are restricted. Request elevated access through your Director.</div><button class="btn" data-a="close">Close</button></div></div>`}
 function drawer(){const d=st.dr;if(d.t=='a'){const a=A.find(x=>x.id==d.id);return `<div class="dr" role="dialog"><button class="btn o s" data-a="close" style="float:right">Close</button><h3>${a.id}</h3><p>${a.t}</p><p>${chip(a.sev,sevC[a.sev])} ${chip(a.st,'in')} ${chip('Escalation: '+a.esc)}</p><p class="sub">${a.cat} · ${a.dept} · Created ${a.cr}<br>Owner: ${a.own}</p><b>Action timeline</b><div class="tl">${a.log.map(l=>`<div>● ${l}</div>`).join('')}</div>${a.ev?`<p><b>Closure evidence:</b> ${a.ev}</p>`:''}
@@ -206,11 +220,37 @@ ${a.st!='Resolved'?`<div class="fl"><button class="btn s" data-a="ack" data-k="$
 const s=SYS.find(x=>x[0]==d.id);return `<div class="dr" role="dialog"><button class="btn o s" data-a="close" style="float:right">Close</button><h3>${s[0]} · ${s[1]}</h3><p>${st2(s[2])}</p><p>Last successful sync: ${s[3]}<br>Data freshness: ${s[4]}<br>Failed attempts (7 d): ${s[5]}<br>Source availability: ${s[6]}%</p>${s[2]!='Healthy'?`<div class="note e">Figures from this source are delayed. Dashboards show a “Delayed” label until the next successful sync.</div>`:''}<button class="btn" data-a="sync" data-k="${s[0]}">Sync now</button></div>`}
 function login(){return `<div class="ct"><div class="lc"><div class="logo" style="width:52px;height:52px;font-size:24px">C</div><h2>CIABOC Management Intelligence</h2><p class="sub">Commission to Investigate Allegations of Bribery or Corruption · Sri Lanka</p><button class="btn" data-a="go" data-k="overview">Sign in with CIABOC Account</button><p class="sub" style="margin-top:12px">Single sign-on with multi-factor authentication. Access is limited to authorized officers and every session is logged.</p><p><a href="#" data-a="forgot">Forgot password?</a></p><div class="note">Prototype with fictional sample data. Figures do not represent actual CIABOC statistics.</div></div></div>`}
 function render(){
-  document.getElementById('app').innerHTML=st.screen=='login'?login():shell();
+  const app=document.getElementById('app');
+  const lastNav=app.querySelector('.nav');
+  const scroll=lastNav?.scrollTop??0;
+  const active=document.activeElement;
+  const sideButton=active?.closest('.side button');
+  const closeScrim=active?.matches('.nav-scrim');
+  app.classList.toggle('with-sidebar',st.screen!=='login');
+  app.innerHTML=st.screen==='login'?login():shell();
+  const nav=app.querySelector('.nav');
+  if(nav)nav.scrollTop=scroll;
+  if(active===lastNav&&nav)nav.focus({preventScroll:true});
+  if(sideButton||closeScrim){
+    const buttons=[...app.querySelectorAll('.side button')];
+    const target=closeScrim?buttons.find(button=>button.dataset.a==='tsb'):buttons.find(button=>
+      button.dataset.a===sideButton.dataset.a&&button.dataset.k===sideButton.dataset.k);
+    target?.focus({preventScroll:true});
+  }
   const livePanel=document.getElementById('vmr-live');
   if(livePanel)vmrLive.mount(livePanel,{months:st.n,compare:st.cmp});
   else vmrLive.unmount();
 }
+compactNav.addEventListener('change',({matches})=>{
+  st.sc=matches;
+  if(st.screen!=='login')render();
+});
+document.addEventListener('keydown',event=>{
+  if(event.key==='Escape'&&compactNav.matches&&!st.sc&&st.screen!=='login'&&!document.querySelector('dialog[open]')){
+    st.sc=true;
+    render();
+  }
+});
 window.addEventListener('message',event=>{
   if(window.parent===window||event.source!==window.parent||event.origin!==location.origin)return;
   if(event.data?.type==='ciaboc:vmr-api'&&vmrLive.connect(event.data.apiBase)&&st.screen==='vmr')render();
@@ -219,7 +259,7 @@ if(window.parent!==window)window.parent.postMessage({type:'ciaboc:vmr-ready'},lo
 function toast(m){const e=document.getElementById('toast');e.textContent=m;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',2400)}
 const now=()=>'22 Nov 2026, '+new Date().toTimeString().slice(0,5),al=id=>A.find(a=>a.id==id);
 function act(a,k,i){const A1=al(k);switch(a){
-case'go':st.screen=k;st.load=true;st.nt=st.pm=false;st.dr=st.md=null;render();setTimeout(()=>{st.load=false;render()},350);return;
+case'go':st.screen=k;if(compactNav.matches)st.sc=true;st.load=true;st.nt=st.pm=false;st.dr=st.md=null;render();setTimeout(()=>{st.load=false;render()},350);return;
 case'tsb':st.sc=!st.sc;break;case'bell':st.nt=!st.nt;st.pm=false;break;case'prof':st.pm=!st.pm;st.nt=false;break;
 case'drill':st.md={k:k,v:event.target.closest('[data-v]').dataset.v};break;case'close':st.md=st.dr=null;break;
 case'alert':st.dr={t:'a',id:k};st.nt=false;break;case'sys':st.dr={t:'s',id:k};break;

@@ -259,9 +259,7 @@ window.vmrView = (() => {
     const hasActivity = report && Object.values(totals.selected).some(Boolean);
 
     return `<header class="vmr-hero">
-      <div><h2>Perimeter & Reception Dashboard</h2><p>Aggregate reception and vehicle activity in Sri Lanka time.</p>
-        <div class="vmr-source" role="status">${availability}${updated}</div>
-      </div>
+      <div class="vmr-source" role="status">${availability}${updated}</div>
       <div class="vmr-toolbar">
         ${status.canRefresh ? `<span class="vmr-cadence">Auto-refreshes every ${status.refreshSeconds}s</span>` : ""}
         ${status.signInRequired ? '<a class="vmr-button" href="/login" target="_top">Sign in</a>' : status.canRefresh ?

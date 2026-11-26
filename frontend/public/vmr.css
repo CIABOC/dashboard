@@ -39,23 +39,11 @@
 
 .vmr-hero {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 1.25rem;
   border-bottom: 1px solid var(--vmr-border);
   padding-bottom: 1.25rem;
-}
-
-#vmr-live .vmr-hero h2 {
-  font-size: clamp(1.5rem, 2.2vw, 2rem);
-  letter-spacing: -0.035em;
-  line-height: 1.12;
-}
-
-#vmr-live .vmr-hero p {
-  margin-top: 0.45rem;
-  color: var(--vmr-muted);
-  font-size: 0.9375rem;
 }
 
 .vmr-source {
@@ -63,7 +51,6 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 0.5rem 0.75rem;
-  margin-top: 0.8rem;
   color: var(--vmr-muted);
   font-size: 0.8125rem;
 }
@@ -463,7 +450,7 @@
 @container (max-width: 720px) {
   .vmr-operations { grid-template-columns: minmax(0, 1fr); }
   .vmr-operations-panel .vmr-panel-heading { min-height: 0; }
-  .vmr-hero { flex-direction: column; gap: 0.8rem; }
+  .vmr-hero { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
   .vmr-toolbar { justify-content: flex-start; max-width: 100%; }
   .vmr-filter-fields { inset-inline: 0 auto; }
 }

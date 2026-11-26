@@ -1,0 +1,34 @@
+CIABOC Dashboard - Local Atlas Demo
+
+1. Start PostgreSQL
+
+Open Docker Desktop and wait for it to start. Run these commands in PowerShell.
+
+docker start ciaboc-dashboard-db
+docker exec ciaboc-dashboard-db pg_isready -U ciaboc -d ciaboc_dashboard
+
+Wait until the check says "accepting connections". Run the check again if the database is still starting.
+
+2. Start the backend with MongoDB Atlas
+
+Run these commands in PowerShell and keep the window open.
+
+Set-Location 'C:\Users\Ranuda Perera\Documents\WORKS\ciaboc-dashboard\backend'
+.\start-atlas-demo.ps1 -AtlasCredentialsFile "$env:USERPROFILE\Downloads\atlas-credentials-ruchiranga.env"
+
+Wait for Spring Boot to start on port 8080. If an older backend is already using port 8080, stop it with Ctrl+C in its terminal before running the launcher.
+
+3. Start the frontend
+
+Open a second PowerShell window and run these commands.
+
+Set-Location 'C:\Users\Ranuda Perera\Documents\WORKS\ciaboc-dashboard\frontend'
+npm run dev
+
+On a fresh setup or after dependencies change, run npm ci in the frontend folder before npm run dev.
+
+4. Open the dashboard
+
+http://localhost:3000/login
+
+Sign in, open Vehicle Movement & Reception, and check for "Live · Atlas".
